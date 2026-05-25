@@ -46,12 +46,11 @@ function formatLogDate(value) {
   }
 }
 
-function getCustomerLogSections(caseItem) {
-  if (!caseItem) return [];
-  return CUSTOMER_LOG_SECTIONS.filter(
-    ({ key }) =>
-      Array.isArray(caseItem[key]) && caseItem[key].length > 0
-  );
+function getTotalLogCount(caseItem) {
+  return CUSTOMER_LOG_SECTIONS.reduce((sum, { key }) => {
+    const logs = caseItem?.[key];
+    return sum + (Array.isArray(logs) ? logs.length : 0);
+  }, 0);
 }
 
 function logExpandKey(caseId, sectionKey) {
@@ -66,16 +65,27 @@ function StatusBadge({ status }) {
   return <span className="ui-badge-indigo">{status || "Pending"}</span>;
 }
 
-function LogSection({ logs, caseId, sectionKey, title, description, expandedLogs, onToggle }) {
-  const sorted = [...logs].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
+function LabeledField({ label, children }) {
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <span className="w-22 shrink-0 text-xs font-medium uppercase tracking-wide text-slate-500">
+        {label}
+      </span>
+      <div className="min-w-0">{children}</div>
+    </div>
   );
-  const expandKey = logExpandKey(caseId, sectionKey);
-  const showAll = expandedLogs[expandKey];
-  const toShow =
-    showAll || sorted.length <= LOG_PREVIEW_COUNT
-      ? sorted
-      : sorted.slice(0, LOG_PREVIEW_COUNT);
+}
+
+function LogSection({
+  logs,
+  caseId,
+  sectionKey,
+  title,
+  description,
+  expandedLogs,
+  onToggle,
+}) {
+  const entries = Array.isArray(logs) ? logs : [];
 
   return (
     <div className="min-w-0 space-y-2">
@@ -83,83 +93,145 @@ function LogSection({ logs, caseId, sectionKey, title, description, expandedLogs
         <div className="min-w-0 flex-1">
           <h5 className="text-sm font-semibold text-slate-800">{title}</h5>
           {description && (
-            <p className="break-words text-xs text-slate-500">{description}</p>
+            <p className="wrap-break-word text-xs text-slate-500">{description}</p>
           )}
         </div>
-        {sorted.length > LOG_PREVIEW_COUNT && (
+        {entries.length > LOG_PREVIEW_COUNT && (
           <button
             type="button"
-            onClick={() => onToggle(expandKey)}
+            onClick={() => onToggle(logExpandKey(caseId, sectionKey))}
             className="shrink-0 text-sm font-semibold text-indigo-700"
           >
-            {showAll ? "Show less" : "View all"}
+            {expandedLogs[logExpandKey(caseId, sectionKey)]
+              ? "Show less"
+              : "View all"}
           </button>
         )}
       </div>
-      <div className="space-y-3">
-        {toShow.map((log, index) => (
-          <div
-            key={index}
-            className="flex min-w-0 flex-col gap-1 border-t border-indigo-100 pt-3 first:border-0 first:pt-0"
-          >
-            <div className="shrink-0 text-xs text-slate-500">
-              {formatLogDate(log.date)}
-            </div>
-            <div className="min-w-0 wrap-anywhere rounded-lg bg-indigo-50/50 px-3 py-2 text-sm text-slate-800">
-              {log.remark ?? ""}
-            </div>
-          </div>
-        ))}
-      </div>
+
+      {entries.length === 0 ? (
+        <p className="text-sm text-slate-500">No entries yet</p>
+      ) : (
+        <LogTimeline
+          logs={entries}
+          caseId={caseId}
+          sectionKey={sectionKey}
+          expandedLogs={expandedLogs}
+        />
+      )}
     </div>
   );
 }
 
-function CaseCard({ caseItem, expandedLogs, onToggle }) {
-  const logSections = getCustomerLogSections(caseItem);
+function LogTimeline({ logs, caseId, sectionKey, expandedLogs }) {
+  const sorted = [...logs].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
+  const showAll = expandedLogs[logExpandKey(caseId, sectionKey)];
+  const toShow =
+    showAll || sorted.length <= LOG_PREVIEW_COUNT
+      ? sorted
+      : sorted.slice(0, LOG_PREVIEW_COUNT);
+
+  return (
+    <div className="space-y-4">
+      {toShow.map((log, index) => (
+        <div key={index} className="flex min-w-0 gap-2">
+          <div className="flex shrink-0 flex-col items-center pt-1.5">
+            <span
+              className="h-2 w-2 rounded-full bg-indigo-500"
+              aria-hidden
+            />
+          </div>
+          <div className="min-w-0 flex-1 border-l-2 border-indigo-200 pl-3">
+            <time className="text-xs text-slate-500">
+              {formatLogDate(log.date)}
+            </time>
+            <p className="mt-1 wrap-anywhere text-sm text-slate-800">
+              {log.remark ?? ""}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CaseCard({
+  caseItem,
+  expandedLogs,
+  expandedCaseLogs,
+  onToggleLogSection,
+  onToggleCaseLogs,
+}) {
+  const logsOpen = expandedCaseLogs[caseItem.id];
+  const totalLogs = getTotalLogCount(caseItem);
 
   return (
     <article className="ui-card-compact min-w-0 overflow-hidden p-3 sm:p-4">
       <header className="min-w-0">
-        <h3 className="break-words text-base font-semibold text-slate-900">
+        <h3 className="wrap-break-word text-base font-semibold text-slate-900">
           {caseItem.name || "N/A"}
         </h3>
-        <p className="mt-0.5 break-words text-sm text-slate-600">
-          {caseItem.mobile ?? "N/A"}
+        <p className="mt-0.5 wrap-break-word text-sm text-slate-600">
+          {caseItem.companyName?.trim() || "Insurance company not set"}
         </p>
       </header>
 
-      <div className="mt-2 flex flex-wrap gap-2">
-        <StatusBadge status={caseItem.status} />
-        {caseItem.documentShort ? (
-          <span className="ui-badge-rose">Incomplete</span>
-        ) : (
-          <span className="ui-badge-emerald">Complete</span>
-        )}
-        {caseItem.solved ? (
-          <span className="ui-badge-emerald">Solved</span>
-        ) : (
-          <span className="ui-badge-amber">In progress</span>
-        )}
+      <div className="mt-3 space-y-2">
+        <LabeledField label="Status">
+          <StatusBadge status={caseItem.status} />
+        </LabeledField>
+        <LabeledField label="Documents">
+          {caseItem.documentShort ? (
+            <span className="ui-badge-rose">Incomplete</span>
+          ) : (
+            <span className="ui-badge-emerald">Complete</span>
+          )}
+        </LabeledField>
+        <LabeledField label="Progress">
+          {caseItem.solved ? (
+            <span className="ui-badge-emerald">Solved</span>
+          ) : (
+            <span className="ui-badge-amber">In progress</span>
+          )}
+        </LabeledField>
       </div>
 
-      {logSections.length > 0 && (
-        <section className="mt-3 min-w-0 space-y-4 border-t border-indigo-100 pt-3">
-          <h4 className="text-sm font-semibold text-slate-800">Case logs</h4>
-          {logSections.map(({ key, title, description }) => (
-            <LogSection
-              key={key}
-              logs={caseItem[key]}
-              caseId={caseItem.id}
-              sectionKey={key}
-              title={title}
-              description={description}
-              expandedLogs={expandedLogs}
-              onToggle={onToggle}
-            />
-          ))}
-        </section>
-      )}
+      <section className="mt-3 min-w-0 border-t border-indigo-100 pt-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <h4 className="text-sm font-semibold text-slate-800">Case logs</h4>
+            {totalLogs > 0 && !logsOpen && (
+              <span className="ui-badge-indigo">{totalLogs}</span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => onToggleCaseLogs(caseItem.id)}
+            className="shrink-0 text-sm font-semibold text-indigo-700"
+          >
+            {logsOpen ? "Hide logs" : "View logs"}
+          </button>
+        </div>
+
+        {logsOpen && (
+          <div className="mt-4 space-y-4">
+            {CUSTOMER_LOG_SECTIONS.map(({ key, title, description }) => (
+              <LogSection
+                key={key}
+                logs={caseItem[key]}
+                caseId={caseItem.id}
+                sectionKey={key}
+                title={title}
+                description={description}
+                expandedLogs={expandedLogs}
+                onToggle={onToggleLogSection}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </article>
   );
 }
@@ -170,6 +242,7 @@ export default function OngoingComplaintStatus({ customer }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedLogs, setExpandedLogs] = useState({});
+  const [expandedCaseLogs, setExpandedCaseLogs] = useState({});
 
   useEffect(() => {
     let cancelled = false;
@@ -200,8 +273,10 @@ export default function OngoingComplaintStatus({ customer }) {
         }
 
         if (!cancelled) {
-          const orderMap = new Map(caseIds.map((id, i) => [id, i]));
-          all.sort((a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0));
+          all.sort(
+            (a, b) =>
+              new Date(b.complaintDate || 0) - new Date(a.complaintDate || 0)
+          );
           setCases(all);
         }
       } catch (err) {
@@ -220,6 +295,10 @@ export default function OngoingComplaintStatus({ customer }) {
 
   const toggleLogSection = (expandKey) => {
     setExpandedLogs((prev) => ({ ...prev, [expandKey]: !prev[expandKey] }));
+  };
+
+  const toggleCaseLogs = (caseId) => {
+    setExpandedCaseLogs((prev) => ({ ...prev, [caseId]: !prev[caseId] }));
   };
 
   return (
@@ -251,7 +330,9 @@ export default function OngoingComplaintStatus({ customer }) {
               key={caseItem.id}
               caseItem={caseItem}
               expandedLogs={expandedLogs}
-              onToggle={toggleLogSection}
+              expandedCaseLogs={expandedCaseLogs}
+              onToggleLogSection={toggleLogSection}
+              onToggleCaseLogs={toggleCaseLogs}
             />
           ))}
         </div>
