@@ -31,13 +31,6 @@ const PROFILE_FIELDS = [
   { key: "email", label: "Email", icon: "mail", getValue: (c) => c.email, breakAll: true },
   { key: "mobile", label: "Mobile", icon: "phone", getValue: (c) => c.mobile },
   {
-    key: "aadhar",
-    label: "Aadhar",
-    icon: "creditCard",
-    getValue: (c) => String(c.aadharNo).replace(/(\d{4})(?=\d)/g, "$1 "),
-    mono: true,
-  },
-  {
     key: "cases",
     label: "Cases",
     icon: "briefcase",

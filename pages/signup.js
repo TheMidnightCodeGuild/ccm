@@ -10,7 +10,6 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
-  const [aadharNo, setAadharNo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +27,6 @@ export default function Signup() {
           name,
           mobile,
           email,
-          aadharNo,
           password,
         }),
         credentials: "include",
@@ -103,21 +101,6 @@ export default function Signup() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="ccm-input-with-icon"
-              />
-            </CcmFormField>
-
-            <CcmFormField icon="creditCard" label="Aadhar (12 digits)" htmlFor="aadharNo">
-              <input
-                id="aadharNo"
-                name="aadharNo"
-                type="text"
-                inputMode="numeric"
-                autoComplete="off"
-                required
-                maxLength={14}
-                value={aadharNo}
-                onChange={(e) => setAadharNo(e.target.value)}
                 className="ccm-input-with-icon"
               />
             </CcmFormField>

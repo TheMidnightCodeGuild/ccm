@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email, password, name, mobile, aadharNo } = req.body;
+  const { email, password, name, mobile } = req.body;
 
   const trimmedEmail = typeof email === "string" ? email.trim() : "";
   const trimmedName = typeof name === "string" ? name.trim() : "";
@@ -33,15 +33,11 @@ export default async function handler(req, res) {
     typeof mobile === "string"
       ? mobile.replace(/\D/g, "")
       : String(mobile ?? "").replace(/\D/g, "");
-  const aadharDigits =
-    typeof aadharNo === "string"
-      ? aadharNo.replace(/\D/g, "")
-      : String(aadharNo ?? "").replace(/\D/g, "");
 
-  if (!trimmedEmail || !password || !trimmedName || !mobileDigits || !aadharDigits) {
+  if (!trimmedEmail || !password || !trimmedName || !mobileDigits) {
     return res.status(400).json({
       error:
-        "Missing required fields: email, password, name, mobile, and aadharNo are required",
+        "Missing required fields: email, password, name, and mobile are required",
     });
   }
 
@@ -49,16 +45,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Mobile must be a valid 10-digit number" });
   }
 
-  if (aadharDigits.length !== 12) {
-    return res.status(400).json({ error: "Aadhar must be 12 digits" });
-  }
-
   try {
     if (await existsInCustomers("mobile", mobileDigits)) {
       return res.status(409).json({ error: "This mobile number is already registered" });
-    }
-    if (await existsInCustomers("aadharNo", aadharDigits)) {
-      return res.status(409).json({ error: "This Aadhar number is already registered" });
     }
 
     const userCredential = await createUserWithEmailAndPassword(
@@ -73,7 +62,6 @@ export default async function handler(req, res) {
       email: user.email,
       name: trimmedName,
       mobile: mobileDigits,
-      aadharNo: aadharDigits,
       cases: [],
       createdAt: new Date().toISOString(),
     });
