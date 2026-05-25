@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -27,21 +27,6 @@ function chunkArray(arr, size) {
     chunks.push(arr.slice(i, i + size));
   }
   return chunks;
-}
-
-function formatDate(value) {
-  if (!value) return "Not set";
-  try {
-    const d =
-      typeof value?.toDate === "function" ? value.toDate() : new Date(value);
-    return d.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return "Invalid date";
-  }
 }
 
 function formatLogDate(value) {
@@ -93,19 +78,19 @@ function LogSection({ logs, caseId, sectionKey, title, description, expandedLogs
       : sorted.slice(0, LOG_PREVIEW_COUNT);
 
   return (
-    <div className="space-y-2">
+    <div className="min-w-0 space-y-2">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
+        <div className="min-w-0 flex-1">
           <h5 className="text-sm font-semibold text-slate-800">{title}</h5>
           {description && (
-            <p className="text-xs text-slate-500">{description}</p>
+            <p className="break-words text-xs text-slate-500">{description}</p>
           )}
         </div>
         {sorted.length > LOG_PREVIEW_COUNT && (
           <button
             type="button"
             onClick={() => onToggle(expandKey)}
-            className="text-sm font-semibold text-indigo-700"
+            className="shrink-0 text-sm font-semibold text-indigo-700"
           >
             {showAll ? "Show less" : "View all"}
           </button>
@@ -115,18 +100,67 @@ function LogSection({ logs, caseId, sectionKey, title, description, expandedLogs
         {toShow.map((log, index) => (
           <div
             key={index}
-            className="flex flex-col gap-1 border-t border-indigo-100 pt-3 first:border-0 first:pt-0"
+            className="flex min-w-0 flex-col gap-1 border-t border-indigo-100 pt-3 first:border-0 first:pt-0"
           >
             <div className="shrink-0 text-xs text-slate-500">
               {formatLogDate(log.date)}
             </div>
-            <div className="flex-1 rounded-lg bg-indigo-50/50 px-3 py-2 text-sm text-slate-800">
+            <div className="min-w-0 wrap-anywhere rounded-lg bg-indigo-50/50 px-3 py-2 text-sm text-slate-800">
               {log.remark ?? ""}
             </div>
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+function CaseCard({ caseItem, expandedLogs, onToggle }) {
+  const logSections = getCustomerLogSections(caseItem);
+
+  return (
+    <article className="ui-card-compact min-w-0 overflow-hidden p-3 sm:p-4">
+      <header className="min-w-0">
+        <h3 className="break-words text-base font-semibold text-slate-900">
+          {caseItem.name || "N/A"}
+        </h3>
+        <p className="mt-0.5 break-words text-sm text-slate-600">
+          {caseItem.mobile ?? "N/A"}
+        </p>
+      </header>
+
+      <div className="mt-2 flex flex-wrap gap-2">
+        <StatusBadge status={caseItem.status} />
+        {caseItem.documentShort ? (
+          <span className="ui-badge-rose">Incomplete</span>
+        ) : (
+          <span className="ui-badge-emerald">Complete</span>
+        )}
+        {caseItem.solved ? (
+          <span className="ui-badge-emerald">Solved</span>
+        ) : (
+          <span className="ui-badge-amber">In progress</span>
+        )}
+      </div>
+
+      {logSections.length > 0 && (
+        <section className="mt-3 min-w-0 space-y-4 border-t border-indigo-100 pt-3">
+          <h4 className="text-sm font-semibold text-slate-800">Case logs</h4>
+          {logSections.map(({ key, title, description }) => (
+            <LogSection
+              key={key}
+              logs={caseItem[key]}
+              caseId={caseItem.id}
+              sectionKey={key}
+              title={title}
+              description={description}
+              expandedLogs={expandedLogs}
+              onToggle={onToggle}
+            />
+          ))}
+        </section>
+      )}
+    </article>
   );
 }
 
@@ -211,85 +245,15 @@ export default function OngoingComplaintStatus({ customer }) {
       )}
 
       {!loading && !error && cases.length > 0 && (
-        <div className="-mx-1 overflow-x-auto rounded-xl border border-indigo-200/60">
-          <table className="min-w-[640px] w-full divide-y divide-indigo-100">
-            <thead className="bg-indigo-50/80">
-              <tr>
-                <th className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Name
-                </th>
-                <th className="hidden px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 sm:table-cell">
-                  Mobile
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Status
-                </th>
-                <th className="hidden px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 md:table-cell">
-                  Docs
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Progress
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-indigo-50 bg-white">
-              {cases.map((caseItem) => {
-                const logSections = getCustomerLogSections(caseItem);
-                return (
-                  <Fragment key={caseItem.id}>
-                    <tr className="align-top">
-                      <td className="px-3 py-2 text-sm font-medium text-slate-900">
-                        {caseItem.name || "N/A"}
-                      </td>
-                      <td className="hidden px-3 py-2 text-sm text-slate-600 sm:table-cell">
-                        {caseItem.mobile ?? "N/A"}
-                      </td>
-                      <td className="px-3 py-2">
-                        <StatusBadge status={caseItem.status} />
-                      </td>
-                      <td className="hidden px-3 py-2 md:table-cell">
-                        {caseItem.documentShort ? (
-                          <span className="ui-badge-rose">Incomplete</span>
-                        ) : (
-                          <span className="ui-badge-emerald">Complete</span>
-                        )}
-                      </td>
-                      <td className="px-3 py-2">
-                        {caseItem.solved ? (
-                          <span className="ui-badge-emerald">Solved</span>
-                        ) : (
-                          <span className="ui-badge-amber">In progress</span>
-                        )}
-                      </td>
-                    </tr>
-                    {logSections.length > 0 && (
-                      <tr>
-                        <td colSpan={5} className="bg-indigo-50/30 px-3 py-3">
-                          <div className="ui-card-compact space-y-4 p-3">
-                            <h4 className="text-sm font-semibold text-slate-800">
-                              Case logs
-                            </h4>
-                            {logSections.map(({ key, title, description }) => (
-                              <LogSection
-                                key={key}
-                                logs={caseItem[key]}
-                                caseId={caseItem.id}
-                                sectionKey={key}
-                                title={title}
-                                description={description}
-                                expandedLogs={expandedLogs}
-                                onToggle={toggleLogSection}
-                              />
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="min-w-0 space-y-3">
+          {cases.map((caseItem) => (
+            <CaseCard
+              key={caseItem.id}
+              caseItem={caseItem}
+              expandedLogs={expandedLogs}
+              onToggle={toggleLogSection}
+            />
+          ))}
         </div>
       )}
     </div>
