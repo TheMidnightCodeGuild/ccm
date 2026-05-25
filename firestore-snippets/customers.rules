@@ -1,0 +1,10 @@
+// Snippet to merge into your root Firestore rules (inside `match /databases/{database}/documents { ... }`).
+
+match /customers/{customerId} {
+  allow read, write: if request.auth != null && request.auth.uid == customerId;
+}
+
+// NOTE: The CCM dashboard reads `customers/{uid}` from the browser using the Firestore client SDK.
+// A session cookie alone does not attach Firebase Auth to that SDK. For the rule above to allow
+// reads from the dashboard, establish a Firebase Auth session on the client (e.g. custom token
+// or email/password on the client), or serve profile data from a server route using the Admin SDK.
