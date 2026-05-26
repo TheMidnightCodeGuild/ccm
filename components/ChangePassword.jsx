@@ -42,6 +42,7 @@ function PasswordField({
 }
 
 export default function ChangePassword() {
+  const [expanded, setExpanded] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,6 +52,21 @@ export default function ChangePassword() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const clearForm = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setShowCurrent(false);
+    setShowNew(false);
+    setShowConfirm(false);
+    setError(null);
+  };
+
+  const handleCollapse = () => {
+    clearForm();
+    setExpanded(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,10 +103,9 @@ export default function ChangePassword() {
         throw new Error(data.error || "Failed to update password.");
       }
 
+      clearForm();
       setSuccess(data.message || "Password updated successfully.");
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      setExpanded(false);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -98,16 +113,54 @@ export default function ChangePassword() {
     }
   };
 
+  if (!expanded) {
+    return (
+      <div className="space-y-2">
+        <button
+          type="button"
+          onClick={() => {
+            setSuccess(null);
+            setExpanded(true);
+          }}
+          className="ui-card-padded flex w-full items-center justify-between gap-3 text-left transition hover:bg-indigo-50/50"
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+            <CcmIcon name="lock" size={20} className="text-indigo-600" />
+            Change password
+          </span>
+          <CcmIcon name="chevronDown" size={18} className="shrink-0 text-slate-400" />
+        </button>
+        {success && (
+          <p
+            className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
+            role="status"
+          >
+            {success}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="ui-card-padded space-y-4">
-      <div>
-        <div className="flex items-center gap-2">
-          <CcmIcon name="lock" size={20} className="text-indigo-600" />
-          <h3 className="text-sm font-semibold text-slate-900">Change password</h3>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <CcmIcon name="lock" size={20} className="text-indigo-600" />
+            <h3 className="text-sm font-semibold text-slate-900">Change password</h3>
+          </div>
+          <p className="mt-1 text-xs text-slate-600">
+            Enter your current password, then choose a new one.
+          </p>
         </div>
-        <p className="mt-1 text-xs text-slate-600">
-          Enter your current password, then choose a new one.
-        </p>
+        <button
+          type="button"
+          onClick={handleCollapse}
+          className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+        >
+          Cancel
+        </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,15 +200,6 @@ export default function ChangePassword() {
               className="mt-0.5 shrink-0 text-rose-600"
             />
             <span>{error}</span>
-          </p>
-        )}
-
-        {success && (
-          <p
-            className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
-            role="status"
-          >
-            {success}
           </p>
         )}
 
