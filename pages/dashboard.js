@@ -8,6 +8,7 @@ import KnowYourPolicy from "@/components/KnowYourPolicy";
 import OngoingComplaintStatus from "@/components/OngoingComplaintStatus";
 import PolicyAnalysis from "@/components/PolicyAnalysis";
 import SuccessFeesCalculator from "@/components/SuccessFeesCalculator";
+import ChangePassword from "@/components/ChangePassword";
 import CcmIcon, { CcmIconBadge } from "@/components/CcmIcon";
 
 const PANEL_TITLES = {
@@ -159,6 +160,8 @@ export default function Dashboard({ userId }) {
               </div>
             ))}
           </div>
+
+          <ChangePassword />
 
           <div className="grid grid-cols-2 gap-3">
             {NAV_ITEMS.map((item) => (
