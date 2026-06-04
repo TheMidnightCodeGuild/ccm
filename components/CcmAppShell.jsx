@@ -37,7 +37,7 @@ export default function CcmAppShell({
                 {title}
               </h1>
               {subtitle && (
-                <p className="truncate text-xs text-indigo-200/90">{subtitle}</p>
+                <p className="truncate text-xs text-white/85">{subtitle}</p>
               )}
             </div>
           </div>

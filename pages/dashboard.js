@@ -9,22 +9,29 @@ import OngoingComplaintStatus from "@/components/OngoingComplaintStatus";
 import PolicyAnalysis from "@/components/PolicyAnalysis";
 import SuccessFeesCalculator from "@/components/SuccessFeesCalculator";
 import ChangePassword from "@/components/ChangePassword";
+import MeetOurTeam from "@/components/MeetOurTeam";
+import CustomerReviews from "@/components/CustomerReviews";
+import TestimonialVideos from "@/components/TestimonialVideos";
 import CcmIcon, { CcmIconBadge } from "@/components/CcmIcon";
 
 const PANEL_TITLES = {
   complaint: "File Your Complaint",
+  referCase: "Refer a Case",
   policy: "Know Your Policy",
   status: "Complaint Status",
   policyAnalysis: "Policy Analysis",
   successFees: "Success Fees",
+  team: "Meet Our Team",
 };
 
 const NAV_ITEMS = [
-  { id: "complaint", label: "File Complaint", short: "Complaint", icon: "filePlus", primary: true },
-  { id: "policy", label: "Know Your Policy", short: "Policy", icon: "fileText" },
-  { id: "status", label: "Complaint Status", short: "Status", icon: "listChecks" },
-  { id: "policyAnalysis", label: "Policy Analysis", short: "Analysis", icon: "clipboardCheck" },
-  { id: "successFees", label: "Success Fees Calculator", short: "Fees", icon: "calculator" },
+  { id: "complaint", label: "File Complaint", short: "Complaint", icon: "filePlus", accent: "complaint", primary: true },
+  { id: "referCase", label: "Refer a Case", short: "Refer", icon: "userPlus", accent: "refer" },
+  { id: "policy", label: "Know Your Policy", short: "Policy", icon: "fileText", accent: "policy" },
+  { id: "status", label: "Complaint Status", short: "Status", icon: "listChecks", accent: "status" },
+  { id: "policyAnalysis", label: "Policy Analysis", short: "Analysis", icon: "clipboardCheck", accent: "analysis" },
+  { id: "successFees", label: "Success Fees Calculator", short: "Fees", icon: "calculator", accent: "fees" },
+  { id: "team", label: "Meet Our Team", short: "Team", icon: "users", accent: "team" },
 ];
 
 const PROFILE_FIELDS = [
@@ -169,13 +176,11 @@ export default function Dashboard({ userId }) {
                 key={item.id}
                 type="button"
                 onClick={() => setActivePanel(item.id)}
-                className={
-                  item.primary
-                    ? "ccm-nav-tile ring-2 ring-indigo-400/40"
-                    : "ccm-nav-tile"
-                }
+                className={`ccm-nav-tile ccm-nav-tile--${item.accent}${
+                  item.primary ? " ring-2 ring-indigo-500/50" : ""
+                }`}
               >
-                <CcmIconBadge name={item.icon} />
+                <CcmIconBadge name={item.icon} accent={item.accent} />
                 <span className="text-sm font-semibold text-slate-900">
                   {item.short}
                 </span>
@@ -185,6 +190,9 @@ export default function Dashboard({ userId }) {
               </button>
             ))}
           </div>
+
+          <CustomerReviews />
+          <TestimonialVideos />
         </div>
       )}
 
@@ -192,6 +200,15 @@ export default function Dashboard({ userId }) {
         <FileYourComplaint
           userId={userId}
           customer={customer}
+          onSuccess={loadCustomer}
+        />
+      )}
+
+      {!loading && customer && activePanel === "referCase" && (
+        <FileYourComplaint
+          userId={userId}
+          customer={customer}
+          mode="refer"
           onSuccess={loadCustomer}
         />
       )}
@@ -215,6 +232,8 @@ export default function Dashboard({ userId }) {
       {!loading && customer && activePanel === "successFees" && (
         <SuccessFeesCalculator />
       )}
+
+      {!loading && customer && activePanel === "team" && <MeetOurTeam />}
     </CcmAppShell>
   );
 }

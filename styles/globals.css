@@ -5,8 +5,22 @@
   --color-surface: #ffffff;
   --color-surface-muted: #f8fafc;
   --color-border-subtle: #e2e8f0;
-  --color-accent: #4f46e5;
-  --color-accent-muted: #eef2ff;
+  --color-brand: #4f46e5;
+  --color-brand-muted: #eef2ff;
+  --color-refer: #059669;
+  --color-refer-muted: #ecfdf5;
+  --color-policy: #0284c7;
+  --color-policy-muted: #e0f2fe;
+  --color-status: #d97706;
+  --color-status-muted: #fffbeb;
+  --color-analysis: #7c3aed;
+  --color-analysis-muted: #f5f3ff;
+  --color-fees: #ea580c;
+  --color-fees-muted: #fff7ed;
+  --color-team: #0d9488;
+  --color-team-muted: #f0fdfa;
+  --color-reviews: #c026d3;
+  --color-reviews-muted: #fdf4ff;
   --color-accent-emerald: #059669;
   --color-accent-emerald-muted: #ecfdf5;
   --color-accent-amber: #d97706;
@@ -23,9 +37,10 @@
   body {
     @apply min-h-screen text-slate-800;
     background:
-      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse 100% 60% at 0% 100%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
-      linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+      radial-gradient(ellipse 130% 90% at 100% -15%, rgba(99, 102, 241, 0.22) 0%, transparent 55%),
+      radial-gradient(ellipse 110% 70% at 0% 100%, rgba(6, 182, 212, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse 80% 50% at 50% 50%, rgba(192, 38, 211, 0.06) 0%, transparent 60%),
+      linear-gradient(180deg, #fafbff 0%, #f1f5f9 45%, #e8eef5 100%);
     font-family: "Quicksand", ui-sans-serif, system-ui, sans-serif;
   }
 }
@@ -39,20 +54,21 @@
     content: "";
     @apply pointer-events-none fixed inset-0 -z-10;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(79, 70, 229, 0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 50%, rgba(139, 92, 246, 0.06), transparent);
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(79, 70, 229, 0.14), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 50%, rgba(139, 92, 246, 0.1), transparent),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(6, 182, 212, 0.1), transparent);
   }
 
   .ui-spinner {
-    @apply h-10 w-10 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600;
+    @apply h-10 w-10 animate-spin rounded-full border-2 border-violet-200 border-t-indigo-600;
   }
 
   .ui-card-padded {
-    @apply rounded-xl shadow-md border border-indigo-200/40 bg-gradient-to-br from-white via-indigo-50/25 to-violet-50/20 p-5 ring-1 ring-indigo-500/5;
+    @apply rounded-xl border border-indigo-200/50 bg-gradient-to-br from-white via-indigo-50/40 to-violet-50/30 p-5 shadow-md shadow-indigo-500/10 ring-1 ring-indigo-400/15;
   }
 
   .ui-card-compact {
-    @apply rounded-xl border border-indigo-100/80 bg-gradient-to-br from-slate-50/90 to-indigo-50/40 shadow-sm ring-1 ring-slate-200/50;
+    @apply rounded-xl border border-violet-100/90 bg-gradient-to-br from-white via-slate-50/80 to-indigo-50/50 shadow-sm ring-1 ring-indigo-200/40;
   }
 
   .ui-section-title {
@@ -64,11 +80,11 @@
   }
 
   .ui-page-intro {
-    @apply mb-4 rounded-2xl border border-indigo-200/50 bg-gradient-to-r from-indigo-600/[0.08] via-violet-500/[0.07] to-cyan-500/[0.08] px-4 py-4 shadow-sm ring-1 ring-indigo-500/10;
+    @apply mb-4 rounded-2xl border border-indigo-200/60 border-l-4 border-l-indigo-500 bg-gradient-to-r from-indigo-500/12 via-violet-500/10 to-cyan-500/12 px-4 py-4 shadow-sm ring-1 ring-indigo-400/20;
   }
 
   .ui-list-card {
-    @apply cursor-pointer rounded-xl border border-indigo-200/40 bg-gradient-to-br from-white via-indigo-50/35 to-cyan-50/25 p-6 shadow-md ring-1 ring-indigo-500/5 transition-all duration-300 active:scale-[0.98] hover:border-indigo-400/60 hover:shadow-lg hover:shadow-indigo-500/10;
+    @apply cursor-pointer rounded-xl border border-indigo-200/50 bg-gradient-to-br from-white via-indigo-50/45 to-cyan-50/35 p-6 shadow-md ring-1 ring-indigo-400/15 transition-all duration-300 active:scale-[0.98] hover:border-indigo-400/70 hover:shadow-lg hover:shadow-indigo-500/15;
   }
 
   .ui-section-indigo {
@@ -76,7 +92,7 @@
   }
 
   .ui-btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none transition;
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700 shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none transition;
   }
 
   .ui-btn-secondary {
@@ -84,7 +100,7 @@
   }
 
   .ui-input {
-    @apply mt-1 w-full rounded-lg border border-slate-300/90 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/35 transition-colors;
+    @apply mt-1 w-full rounded-lg border border-slate-300/90 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/35 transition-colors;
   }
 
   .ui-label {
@@ -92,39 +108,60 @@
   }
 
   .ui-empty-state {
-    @apply rounded-xl border border-dashed border-indigo-300/60 bg-gradient-to-br from-slate-50/90 to-indigo-50/50 px-6 py-8 text-center text-sm text-slate-600;
+    @apply rounded-xl border border-dashed border-violet-300/70 bg-gradient-to-br from-indigo-50/80 via-white to-cyan-50/60 px-6 py-8 text-center text-sm text-slate-600;
   }
 
   .ui-alert-success {
-    @apply rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800;
+    @apply rounded-lg border border-emerald-300/80 bg-gradient-to-r from-emerald-50 to-teal-50/80 px-4 py-3 text-sm font-medium text-emerald-900 shadow-sm;
   }
 
   .ui-alert-error {
-    @apply rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700;
+    @apply rounded-lg border border-rose-300/80 bg-gradient-to-r from-rose-50 to-pink-50/60 px-4 py-3 text-sm font-medium text-rose-800 shadow-sm;
+  }
+
+  .ui-highlight-emerald {
+    @apply rounded-xl border border-emerald-300/70 border-l-4 border-l-emerald-500 bg-gradient-to-br from-emerald-50/95 via-teal-50/70 to-cyan-50/50 px-4 py-3 text-sm text-slate-800 shadow-sm ring-1 ring-emerald-400/20;
+  }
+
+  .ui-highlight-emerald strong,
+  .ui-highlight-emerald .font-semibold {
+    @apply text-emerald-900;
+  }
+
+  .ui-section-header-reviews {
+    @apply flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-50/90 via-fuchsia-50/50 to-violet-50/40 px-2 py-1.5;
+  }
+
+  .ui-section-header-videos {
+    @apply flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-50/90 via-indigo-50/60 to-cyan-50/40 px-2 py-1.5;
+  }
+
+  .ui-review-card {
+    @apply border-amber-200/60 bg-gradient-to-br from-white via-amber-50/25 to-fuchsia-50/20 ring-amber-400/15;
   }
 
   .ui-badge-amber {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-amber-100 text-amber-900 ring-1 ring-amber-500/25;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-amber-100 text-amber-950 ring-1 ring-amber-500/30;
   }
 
   .ui-badge-emerald {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-emerald-100 text-emerald-900 ring-1 ring-emerald-500/25;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-emerald-100 text-emerald-950 ring-1 ring-emerald-500/30;
   }
 
   .ui-badge-rose {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-rose-100 text-rose-800 ring-1 ring-rose-500/25;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-rose-100 text-rose-900 ring-1 ring-rose-500/30;
   }
 
   .ui-badge-indigo {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-indigo-100 text-indigo-800 ring-1 ring-indigo-500/20;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-sm bg-indigo-100 text-indigo-900 ring-1 ring-indigo-500/25;
   }
 
   .ccm-app-frame {
-    @apply mx-auto flex min-h-screen w-full max-w-md flex-col shadow-xl shadow-indigo-950/10 ring-1 ring-indigo-200/40 bg-white/40;
+    @apply mx-auto flex min-h-screen w-full max-w-md flex-col bg-white/75 shadow-2xl shadow-indigo-950/15 ring-1 ring-indigo-300/50 backdrop-blur-md;
   }
 
   .ccm-app-header {
-    @apply sticky top-0 z-20 shrink-0 border-b border-indigo-900/30 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 px-4 py-3 shadow-lg shadow-indigo-950/30;
+    @apply sticky top-0 z-20 shrink-0 border-b border-white/20 bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-600 px-4 py-3 shadow-lg shadow-violet-900/25;
   }
 
   .ccm-app-main {
@@ -133,15 +170,79 @@
   }
 
   .ccm-icon-badge {
-    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700;
+    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm;
+  }
+
+  .ccm-icon-badge--complaint {
+    @apply bg-gradient-to-br from-indigo-100 to-violet-100 ring-1 ring-indigo-300/50;
+  }
+
+  .ccm-icon-badge--refer {
+    @apply bg-gradient-to-br from-emerald-100 to-teal-100 ring-1 ring-emerald-300/50;
+  }
+
+  .ccm-icon-badge--policy {
+    @apply bg-gradient-to-br from-sky-100 to-cyan-100 ring-1 ring-sky-300/50;
+  }
+
+  .ccm-icon-badge--status {
+    @apply bg-gradient-to-br from-amber-100 to-orange-100 ring-1 ring-amber-300/50;
+  }
+
+  .ccm-icon-badge--analysis {
+    @apply bg-gradient-to-br from-violet-100 to-fuchsia-100 ring-1 ring-violet-300/50;
+  }
+
+  .ccm-icon-badge--fees {
+    @apply bg-gradient-to-br from-orange-100 to-amber-100 ring-1 ring-orange-300/50;
+  }
+
+  .ccm-icon-badge--team {
+    @apply bg-gradient-to-br from-teal-100 to-cyan-100 ring-1 ring-teal-300/50;
   }
 
   .ccm-nav-tile {
-    @apply flex min-h-[100px] cursor-pointer flex-col items-start justify-center gap-2 rounded-xl border border-indigo-200/40 bg-gradient-to-br from-white via-indigo-50/35 to-cyan-50/25 p-4 text-left shadow-md ring-1 ring-indigo-500/5 transition-all duration-300 active:scale-[0.98] hover:border-indigo-400/60 hover:shadow-lg hover:shadow-indigo-500/10;
+    @apply flex min-h-[100px] cursor-pointer flex-col items-start justify-center gap-2 rounded-xl border p-4 text-left shadow-md ring-1 transition-all duration-300 active:scale-[0.98] hover:shadow-lg;
+  }
+
+  .ccm-nav-tile--complaint {
+    @apply border-indigo-300/60 bg-gradient-to-br from-white via-indigo-50/70 to-violet-50/50 ring-indigo-400/20 hover:border-indigo-400 hover:shadow-indigo-500/20;
+  }
+
+  .ccm-nav-tile--refer {
+    @apply border-emerald-300/60 bg-gradient-to-br from-white via-emerald-50/70 to-teal-50/50 ring-emerald-400/20 hover:border-emerald-400 hover:shadow-emerald-500/20;
+  }
+
+  .ccm-nav-tile--policy {
+    @apply border-sky-300/60 bg-gradient-to-br from-white via-sky-50/70 to-cyan-50/50 ring-sky-400/20 hover:border-sky-400 hover:shadow-sky-500/20;
+  }
+
+  .ccm-nav-tile--status {
+    @apply border-amber-300/60 bg-gradient-to-br from-white via-amber-50/70 to-orange-50/40 ring-amber-400/20 hover:border-amber-400 hover:shadow-amber-500/20;
+  }
+
+  .ccm-nav-tile--analysis {
+    @apply border-violet-300/60 bg-gradient-to-br from-white via-violet-50/70 to-fuchsia-50/40 ring-violet-400/20 hover:border-violet-400 hover:shadow-violet-500/20;
+  }
+
+  .ccm-nav-tile--fees {
+    @apply border-orange-300/60 bg-gradient-to-br from-white via-orange-50/60 to-amber-50/50 ring-orange-400/20 hover:border-orange-400 hover:shadow-orange-500/20;
+  }
+
+  .ccm-nav-tile--team {
+    @apply border-teal-300/60 bg-gradient-to-br from-white via-teal-50/70 to-cyan-50/50 ring-teal-400/20 hover:border-teal-400 hover:shadow-teal-500/20;
+  }
+
+  .ccm-auth-card {
+    @apply w-full space-y-6 rounded-2xl border border-violet-200/70 bg-gradient-to-br from-white via-indigo-50/40 to-cyan-50/50 p-6 shadow-2xl shadow-violet-900/15 ring-2 ring-indigo-300/40;
+  }
+
+  .ccm-auth-title {
+    @apply mt-4 text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-800 via-violet-700 to-cyan-700 bg-clip-text text-transparent;
   }
 
   .ccm-stat-row {
-    @apply flex items-center justify-between gap-2 border-b border-indigo-100/80 py-2.5 last:border-0;
+    @apply flex items-center justify-between gap-2 border-b border-indigo-100/80 py-2.5 last:border-0 even:bg-indigo-50/25;
   }
 
   .ccm-stat-label {
@@ -149,7 +250,7 @@
   }
 
   .ccm-input-with-icon {
-    @apply !mt-0 w-full rounded-lg border border-slate-300/90 bg-white py-2 pl-10 pr-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/35;
+    @apply !mt-0 w-full rounded-lg border border-slate-300/90 bg-white py-2 pl-10 pr-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/35;
   }
 
   .ccm-stat-value {

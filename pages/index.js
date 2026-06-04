@@ -42,16 +42,16 @@ export default function Home() {
   return (
     <div className="ccm-app-frame min-h-screen">
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
-        <div className="w-full space-y-6 rounded-2xl border border-white/50 bg-gradient-to-br from-white/98 via-white/95 to-indigo-50/90 p-6 shadow-2xl shadow-indigo-950/15 ring-1 ring-indigo-200/60">
+        <div className="ccm-auth-card">
           <div className="text-center">
             <Image
               src="/images/logo.png"
               width={80}
               height={80}
               alt="Claimant Mitra"
-              className="mx-auto h-16 w-auto rounded-xl"
+              className="mx-auto h-16 w-auto rounded-xl ring-2 ring-indigo-200/60"
             />
-            <h1 className="mt-4 text-xl font-bold tracking-tight bg-gradient-to-r from-slate-900 via-indigo-900 to-indigo-700 bg-clip-text text-transparent">
+            <h1 className="ccm-auth-title">
               Claimant Mitra · Customer
             </h1>
             <p className="mt-1 text-sm text-slate-600">Sign in to your account</p>
@@ -121,7 +121,7 @@ export default function Home() {
             No account?{" "}
             <Link
               href="/signup"
-              className="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900"
+              className="font-semibold text-violet-700 underline underline-offset-2 hover:text-violet-900"
             >
               Create one
             </Link>

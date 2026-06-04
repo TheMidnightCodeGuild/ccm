@@ -5,7 +5,9 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronLeft,
+  ChevronRight,
   ChevronUp,
+  Star,
   ClipboardCheck,
   CreditCard,
   Download,
@@ -20,6 +22,9 @@ import {
   Shield,
   Sparkles,
   User,
+  UserPlus,
+  Users,
+  Video,
 } from "lucide-react";
 
 const ICONS = {
@@ -29,6 +34,7 @@ const ICONS = {
   clipboardCheck: ClipboardCheck,
   calculator: Calculator,
   user: User,
+  userPlus: UserPlus,
   mail: Mail,
   phone: Phone,
   creditCard: CreditCard,
@@ -42,8 +48,12 @@ const ICONS = {
   alertCircle: AlertCircle,
   chevronDown: ChevronDown,
   chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
   chevronUp: ChevronUp,
+  star: Star,
   shield: Shield,
+  users: Users,
+  video: Video,
 };
 
 export default function CcmIcon({
@@ -65,10 +75,23 @@ export default function CcmIcon({
   );
 }
 
-export function CcmIconBadge({ name, className = "" }) {
+const BADGE_ICON_COLORS = {
+  complaint: "text-indigo-700",
+  refer: "text-emerald-700",
+  policy: "text-sky-700",
+  status: "text-amber-800",
+  analysis: "text-violet-700",
+  fees: "text-orange-700",
+  team: "text-teal-700",
+};
+
+export function CcmIconBadge({ name, accent = "complaint", className = "" }) {
+  const iconColor = BADGE_ICON_COLORS[accent] || BADGE_ICON_COLORS.complaint;
   return (
-    <span className={`ccm-icon-badge ${className}`.trim()}>
-      <CcmIcon name={name} size={22} className="text-indigo-700" />
+    <span
+      className={`ccm-icon-badge ccm-icon-badge--${accent} ${className}`.trim()}
+    >
+      <CcmIcon name={name} size={22} className={iconColor} />
     </span>
   );
 }

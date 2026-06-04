@@ -26,7 +26,9 @@ export default function FileYourComplaint({
   userId,
   customer,
   onSuccess,
+  mode = "complaint",
 }) {
+  const isRefer = mode === "refer";
   const [formData, setFormData] = useState(initialForm);
   const [files, setFiles] = useState([]);
   const [selectedFileNames, setSelectedFileNames] = useState([]);
@@ -36,7 +38,7 @@ export default function FileYourComplaint({
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!customer) return;
+    if (isRefer || !customer) return;
     setFormData((prev) => ({
       ...prev,
       name: customer.name ?? prev.name,
@@ -44,7 +46,7 @@ export default function FileYourComplaint({
       mobile: customer.mobile != null ? String(customer.mobile) : prev.mobile,
       aadharNo: customer.aadharNo != null ? String(customer.aadharNo) : prev.aadharNo,
     }));
-  }, [customer]);
+  }, [customer, isRefer]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,7 +105,8 @@ export default function FileYourComplaint({
           : 0,
         mobile: formData.mobile ? Number(String(formData.mobile).replace(/\D/g, "")) : null,
         partnerRef: "",
-        customerUserId: userId,
+        customerUserId: isRefer ? "" : userId,
+        ...(isRefer ? { referredByCustomerId: userId } : {}),
         complaintDate: new Date().toISOString(),
         takenForReview: false,
         reviewDate: null,
@@ -141,9 +144,11 @@ export default function FileYourComplaint({
 
       const docRef = await addDoc(collection(db, "users"), userDoc);
 
-      await updateDoc(doc(db, "customers", userId), {
-        cases: arrayUnion(docRef.id),
-      });
+      if (!isRefer) {
+        await updateDoc(doc(db, "customers", userId), {
+          cases: arrayUnion(docRef.id),
+        });
+      }
 
       setSuccess(true);
       setFormData(initialForm);
@@ -153,7 +158,10 @@ export default function FileYourComplaint({
       if (typeof onSuccess === "function") onSuccess();
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to submit complaint.");
+      setError(
+        err.message ||
+          (isRefer ? "Failed to submit referral." : "Failed to submit complaint.")
+      );
     } finally {
       setLoading(false);
       setUploadProgress(0);
@@ -162,14 +170,36 @@ export default function FileYourComplaint({
 
   return (
     <div className="ui-card-padded space-y-5">
-      <CcmPageIntro icon="filePlus" eyebrow="Complaint">
-        Your case will be added and linked to your account.
-      </CcmPageIntro>
+      {isRefer ? (
+        <>
+          <CcmPageIntro icon="userPlus" eyebrow="Refer a case">
+            Submit details for someone else&apos;s insurance claim. We will review
+            the case and contact the client.
+          </CcmPageIntro>
+          <div className="ui-highlight-emerald" role="note">
+            <p className="font-semibold">
+              Earn ₹300 when your referred case is accepted and taken up by
+              Claimant Mitra.
+            </p>
+            <p className="mt-1 text-xs text-slate-600">
+              Payout is subject to verification after the case is accepted.
+            </p>
+          </div>
+        </>
+      ) : (
+        <CcmPageIntro icon="filePlus" eyebrow="Complaint">
+          Your case will be added and linked to your account.
+        </CcmPageIntro>
+      )}
 
       {success && (
         <div className="ui-alert-success flex items-start gap-2" role="status">
           <CcmIcon name="checkCircle2" size={18} className="mt-0.5 shrink-0 text-emerald-700" />
-          <span>Complaint filed successfully. It has been added to your cases.</span>
+          <span>
+            {isRefer
+              ? "Referral submitted successfully. We'll review the case and contact the client."
+              : "Complaint filed successfully. It has been added to your cases."}
+          </span>
         </div>
       )}
 
@@ -341,7 +371,7 @@ export default function FileYourComplaint({
           disabled={loading}
           className="ui-btn-primary w-full"
         >
-          {loading ? "Submitting…" : "Submit complaint"}
+          {loading ? "Submitting…" : isRefer ? "Submit referral" : "Submit complaint"}
         </button>
       </form>
     </div>

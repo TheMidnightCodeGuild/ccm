@@ -1,0 +1,13 @@
+// Snippet to merge into your root Firestore rules (inside `match /databases/{database}/documents { ... }`).
+//
+// Collection: customerReviews
+// Fields: reviewerName (string), rating (number 1-5), reviewText (string),
+//         googleReviewUrl (string), createdAt (timestamp), active (boolean, default true)
+
+match /customerReviews/{reviewId} {
+  // CCM customers: read published reviews when signed in with Firebase Auth
+  allow read: if request.auth != null;
+
+  // Master portal staff: create/update/delete (tighten to admin claims when available)
+  allow create, update, delete: if request.auth != null;
+}

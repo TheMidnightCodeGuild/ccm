@@ -57,6 +57,41 @@ function logExpandKey(caseId, sectionKey) {
   return `${caseId}:${sectionKey}`;
 }
 
+function isValidClaimScore(value) {
+  return typeof value === "number" && !Number.isNaN(value) && value >= 0 && value <= 100;
+}
+
+function claimScoreBarColor(score) {
+  if (score >= 70) return "bg-emerald-500";
+  if (score >= 40) return "bg-amber-500";
+  return "bg-rose-500";
+}
+
+function ClaimScoreDisplay({ score }) {
+  if (!isValidClaimScore(score)) return null;
+
+  return (
+    <div className="min-w-0 space-y-1.5">
+      <p className="text-sm font-medium text-slate-800">
+        {score}% chance of success
+      </p>
+      <div
+        className="h-2.5 w-full overflow-hidden rounded-full bg-gradient-to-r from-slate-200 via-indigo-100 to-violet-100"
+        role="progressbar"
+        aria-valuenow={score}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`Claim score: ${score} percent chance of success`}
+      >
+        <div
+          className={`h-full rounded-full transition-all ${claimScoreBarColor(score)}`}
+          style={{ width: `${score}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function StatusBadge({ status }) {
   const s = String(status || "").toLowerCase();
   if (s === "pending") return <span className="ui-badge-amber">Pending</span>;
@@ -196,6 +231,11 @@ function CaseCard({
             <span className="ui-badge-amber">In progress</span>
           )}
         </LabeledField>
+        {isValidClaimScore(caseItem.claimScore) && (
+          <LabeledField label="Claim score">
+            <ClaimScoreDisplay score={caseItem.claimScore} />
+          </LabeledField>
+        )}
       </div>
 
       <section className="mt-3 min-w-0 border-t border-indigo-100 pt-3">
