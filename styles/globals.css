@@ -128,6 +128,22 @@
     @apply text-emerald-900;
   }
 
+  .ccm-refer-hero {
+    @apply relative overflow-hidden rounded-2xl border border-emerald-300/70 border-l-4 border-l-emerald-500 bg-gradient-to-br from-emerald-500/15 via-teal-50/95 to-cyan-50/50 px-4 py-5 shadow-lg shadow-emerald-500/15 ring-1 ring-emerald-400/25;
+  }
+
+  .ccm-refer-hero-eyebrow {
+    @apply text-xs font-bold uppercase tracking-widest text-emerald-700;
+  }
+
+  .ccm-refer-hero-amount {
+    @apply text-3xl font-extrabold tracking-tight text-emerald-900 sm:text-4xl;
+  }
+
+  .ccm-refer-hero-btn {
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 shadow-md shadow-emerald-600/30 hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition;
+  }
+
   .ui-section-header-reviews {
     @apply flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-50/90 via-fuchsia-50/50 to-violet-50/40 px-2 py-1.5;
   }

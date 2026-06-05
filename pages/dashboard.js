@@ -12,6 +12,7 @@ import ChangePassword from "@/components/ChangePassword";
 import MeetOurTeam from "@/components/MeetOurTeam";
 import CustomerReviews from "@/components/CustomerReviews";
 import TestimonialVideos from "@/components/TestimonialVideos";
+import ReferCasePromo from "@/components/ReferCasePromo";
 import CcmIcon, { CcmIconBadge } from "@/components/CcmIcon";
 
 const PANEL_TITLES = {
@@ -75,6 +76,7 @@ export default function Dashboard({ userId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activePanel, setActivePanel] = useState(null);
+  const [profileExpanded, setProfileExpanded] = useState(false);
 
   const loadCustomer = useCallback(async () => {
     const ref = doc(db, "customers", userId);
@@ -145,33 +147,64 @@ export default function Dashboard({ userId }) {
           <div className="ui-page-intro">
             <div className="flex items-center gap-2">
               <CcmIcon name="layoutGrid" size={22} />
-              <p className="ui-section-eyebrow !mb-0">Your profile</p>
+              <p className="ui-section-eyebrow mb-0!">Your profile</p>
             </div>
             <p className="mt-2 text-sm text-slate-600">
               Tap a service below to get started.
             </p>
           </div>
 
-          <div className="ui-card-padded space-y-0 !p-4">
-            {PROFILE_FIELDS.map((field) => (
-              <div key={field.key} className="ccm-stat-row">
-                <span className="ccm-stat-label">
-                  <CcmIcon name={field.icon} size={16} className="text-indigo-500" />
-                  {field.label}
+          <div className="ui-card-padded space-y-0 p-4!">
+            <button
+              type="button"
+              onClick={() => setProfileExpanded((v) => !v)}
+              className="w-full flex items-center justify-between gap-3 text-left"
+              aria-expanded={profileExpanded}
+            >
+              <span className="flex items-center gap-2">
+                <CcmIcon name="user" size={18} className="text-indigo-500" />
+                <span className="text-sm font-semibold text-slate-900">
+                  Profile details
                 </span>
-                <span
-                  className={`ccm-stat-value ${field.breakAll ? "break-all" : ""} ${field.mono ? "font-mono text-xs" : ""}`}
-                >
-                  {field.getValue(customer)}
-                </span>
+              </span>
+              <CcmIcon
+                name={profileExpanded ? "chevronUp" : "chevronDown"}
+                size={18}
+                className="text-slate-500"
+              />
+            </button>
+
+            {profileExpanded && (
+              <div className="mt-3 space-y-0">
+                {PROFILE_FIELDS.map((field) => (
+                  <div key={field.key} className="ccm-stat-row">
+                    <span className="ccm-stat-label">
+                      <CcmIcon
+                        name={field.icon}
+                        size={16}
+                        className="text-indigo-500"
+                      />
+                      {field.label}
+                    </span>
+                    <span
+                      className={`ccm-stat-value ${
+                        field.breakAll ? "break-all" : ""
+                      } ${field.mono ? "font-mono text-xs" : ""}`}
+                    >
+                      {field.getValue(customer)}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
 
           <ChangePassword />
 
+          <ReferCasePromo onRefer={() => setActivePanel("referCase")} />
+
           <div className="grid grid-cols-2 gap-3">
-            {NAV_ITEMS.map((item) => (
+            {NAV_ITEMS.filter((item) => item.id !== "referCase").map((item) => (
               <button
                 key={item.id}
                 type="button"
