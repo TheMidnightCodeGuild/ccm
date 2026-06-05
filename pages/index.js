@@ -40,8 +40,8 @@ export default function Home() {
   };
 
   return (
-    <div className="ccm-app-frame min-h-screen">
-      <div className="ccm-auth-header">
+    <div className="ccm-app-frame">
+      <div className="ccm-auth-header shrink-0">
         <Image
           src="/images/logo.png"
           width={48}
@@ -53,7 +53,7 @@ export default function Home() {
         <h1 className="mt-3 text-lg font-bold text-white">Claimant Mitra</h1>
         <p className="text-xs text-white/85">Customer portal</p>
       </div>
-      <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
+      <main className="ccm-auth-main flex flex-col items-center justify-center">
         <div className="ccm-auth-card">
           <div className="text-center">
             <h2 className="ccm-auth-title">Sign in</h2>
