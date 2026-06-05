@@ -41,20 +41,23 @@ export default function Home() {
 
   return (
     <div className="ccm-app-frame min-h-screen">
+      <div className="ccm-auth-header">
+        <Image
+          src="/images/logo.png"
+          width={48}
+          height={48}
+          alt=""
+          className="mx-auto h-12 w-12 rounded-xl ring-2 ring-white/30"
+          aria-hidden
+        />
+        <h1 className="mt-3 text-lg font-bold text-white">Claimant Mitra</h1>
+        <p className="text-xs text-white/85">Customer portal</p>
+      </div>
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
         <div className="ccm-auth-card">
           <div className="text-center">
-            <Image
-              src="/images/logo.png"
-              width={80}
-              height={80}
-              alt="Claimant Mitra"
-              className="mx-auto h-16 w-auto rounded-xl ring-2 ring-indigo-200/60"
-            />
-            <h1 className="ccm-auth-title">
-              Claimant Mitra · Customer
-            </h1>
-            <p className="mt-1 text-sm text-slate-600">Sign in to your account</p>
+            <h2 className="ccm-auth-title">Sign in</h2>
+            <p className="mt-1 text-sm text-slate-600">Welcome back</p>
           </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>

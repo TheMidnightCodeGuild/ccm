@@ -1,5 +1,6 @@
 import {
   AlertCircle,
+  BookOpen,
   Briefcase,
   Calculator,
   CheckCircle2,
@@ -13,6 +14,7 @@ import {
   Download,
   FilePlus,
   FileText,
+  Images,
   LayoutGrid,
   ListChecks,
   Lock,
@@ -46,6 +48,7 @@ const ICONS = {
   sparkles: Sparkles,
   checkCircle2: CheckCircle2,
   alertCircle: AlertCircle,
+  bookOpen: BookOpen,
   chevronDown: ChevronDown,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
@@ -54,6 +57,7 @@ const ICONS = {
   shield: Shield,
   users: Users,
   video: Video,
+  images: Images,
 };
 
 export default function CcmIcon({
@@ -83,6 +87,7 @@ const BADGE_ICON_COLORS = {
   analysis: "text-violet-700",
   fees: "text-orange-700",
   team: "text-teal-700",
+  parigyan: "text-violet-700",
 };
 
 export function CcmIconBadge({ name, accent = "complaint", className = "" }) {

@@ -47,19 +47,22 @@ export default function Signup() {
 
   return (
     <div className="ccm-app-frame min-h-screen">
+      <div className="ccm-auth-header">
+        <Image
+          src="/images/logo.png"
+          width={48}
+          height={48}
+          alt=""
+          className="mx-auto h-12 w-12 rounded-xl ring-2 ring-white/30"
+          aria-hidden
+        />
+        <h1 className="mt-3 text-lg font-bold text-white">Claimant Mitra</h1>
+        <p className="text-xs text-white/85">Customer portal</p>
+      </div>
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
         <div className="ccm-auth-card space-y-5">
           <div className="text-center">
-            <Image
-              src="/images/logo.png"
-              width={72}
-              height={72}
-              alt="Claimant Mitra"
-              className="mx-auto h-14 w-auto rounded-xl ring-2 ring-indigo-200/60"
-            />
-            <h1 className="ccm-auth-title mt-3">
-              Create account
-            </h1>
+            <h2 className="ccm-auth-title">Create account</h2>
             <p className="mt-1 text-sm text-slate-600">Register for customer access</p>
           </div>
 

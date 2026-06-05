@@ -6,6 +6,8 @@ export default function CcmAppShell({
   subtitle,
   onBack,
   onLogout,
+  bottomNav,
+  hasBottomNav = false,
   children,
 }) {
   return (
@@ -41,7 +43,7 @@ export default function CcmAppShell({
               )}
             </div>
           </div>
-          {onLogout && (
+          {onLogout && !hasBottomNav && (
             <button
               type="button"
               onClick={onLogout}
@@ -53,7 +55,12 @@ export default function CcmAppShell({
           )}
         </div>
       </header>
-      <main className="ccm-app-main">{children}</main>
+      <main
+        className={`ccm-app-main${hasBottomNav ? " ccm-app-main--with-tabs" : ""}`}
+      >
+        {children}
+      </main>
+      {bottomNav}
     </div>
   );
 }

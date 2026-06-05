@@ -64,7 +64,7 @@
   }
 
   .ui-card-padded {
-    @apply rounded-xl border border-indigo-200/50 bg-gradient-to-br from-white via-indigo-50/40 to-violet-50/30 p-5 shadow-md shadow-indigo-500/10 ring-1 ring-indigo-400/15;
+    @apply rounded-xl border border-indigo-300/55 bg-gradient-to-br from-white via-indigo-50/55 to-violet-50/45 p-5 shadow-md shadow-indigo-500/15 ring-1 ring-indigo-400/25;
   }
 
   .ui-card-compact {
@@ -145,11 +145,23 @@
   }
 
   .ui-section-header-reviews {
-    @apply flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-50/90 via-fuchsia-50/50 to-violet-50/40 px-2 py-1.5;
+    @apply flex items-center gap-2 rounded-xl border border-amber-300/50 bg-gradient-to-r from-amber-100/90 via-fuchsia-100/60 to-violet-100/50 px-3 py-2 shadow-sm ring-1 ring-amber-400/20;
   }
 
   .ui-section-header-videos {
-    @apply flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-50/90 via-indigo-50/60 to-cyan-50/40 px-2 py-1.5;
+    @apply flex items-center gap-2 rounded-xl border border-violet-300/50 bg-gradient-to-r from-violet-100/90 via-indigo-100/70 to-cyan-100/50 px-3 py-2 shadow-sm ring-1 ring-violet-400/20;
+  }
+
+  .ui-section-header-gallery {
+    @apply flex items-center gap-2 rounded-xl border border-teal-300/50 bg-gradient-to-r from-teal-100/90 via-cyan-100/70 to-sky-100/50 px-3 py-2 shadow-sm ring-1 ring-teal-400/20;
+  }
+
+  .ui-section-header-fcm {
+    @apply flex items-center gap-2 rounded-xl border border-indigo-300/50 bg-gradient-to-r from-indigo-100/90 via-violet-100/70 to-fuchsia-100/50 px-3 py-2 shadow-sm ring-1 ring-indigo-400/20;
+  }
+
+  .ui-gallery-card {
+    @apply border-teal-200/60 bg-gradient-to-br from-white via-teal-50/25 to-cyan-50/20 ring-teal-400/15;
   }
 
   .ui-review-card {
@@ -173,7 +185,7 @@
   }
 
   .ccm-app-frame {
-    @apply mx-auto flex min-h-screen w-full max-w-md flex-col bg-white/75 shadow-2xl shadow-indigo-950/15 ring-1 ring-indigo-300/50 backdrop-blur-md;
+    @apply mx-auto flex h-dvh max-h-dvh min-h-dvh w-full max-w-md flex-col overflow-hidden bg-white/75 shadow-2xl shadow-indigo-950/15 ring-1 ring-indigo-300/50 backdrop-blur-md;
   }
 
   .ccm-app-header {
@@ -181,8 +193,153 @@
   }
 
   .ccm-app-main {
-    @apply flex-1 overflow-y-auto px-4 pb-10 pt-4;
+    @apply min-h-0 flex-1 overflow-y-auto px-4 pb-10 pt-4;
     padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+
+  .ccm-app-main--with-tabs {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .ccm-bottom-nav {
+    @apply z-30 flex w-full shrink-0 items-stretch justify-around border-t border-indigo-200/60 bg-white/90 px-2 pt-2 shadow-[0_-8px_24px_rgba(79,70,229,0.12)] backdrop-blur-lg;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .ccm-bottom-nav-item {
+    @apply flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-2 py-1.5 text-center transition-all duration-200 active:scale-95;
+  }
+
+  .ccm-bottom-nav-item--active.ccm-bottom-nav-item--home {
+    @apply bg-violet-100/90 ring-1 ring-violet-300/50;
+  }
+
+  .ccm-bottom-nav-item--active.ccm-bottom-nav-item--services {
+    @apply bg-indigo-100/90 ring-1 ring-indigo-300/50;
+  }
+
+  .ccm-bottom-nav-item--active.ccm-bottom-nav-item--account {
+    @apply bg-teal-100/90 ring-1 ring-teal-300/50;
+  }
+
+  .ccm-bottom-nav-label {
+    @apply text-[10px] font-bold uppercase tracking-wide text-slate-600;
+  }
+
+  .ccm-bottom-nav-item--active .ccm-bottom-nav-label {
+    @apply text-slate-900;
+  }
+
+  .ccm-bottom-nav-icon--active-home {
+    @apply text-violet-700;
+  }
+
+  .ccm-bottom-nav-icon--active-services {
+    @apply text-indigo-700;
+  }
+
+  .ccm-bottom-nav-icon--active-account {
+    @apply text-teal-700;
+  }
+
+  .ccm-home-hero {
+    @apply relative overflow-hidden rounded-2xl border border-violet-300/70 bg-gradient-to-br from-violet-500/20 via-fuchsia-500/15 to-cyan-500/20 px-4 py-5 shadow-lg shadow-violet-500/15 ring-1 ring-violet-400/30;
+  }
+
+  .ccm-home-hero-title {
+    @apply text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-800 via-violet-700 to-fuchsia-700 bg-clip-text text-transparent;
+  }
+
+  .ccm-tab-panel-home {
+    @apply space-y-5 rounded-2xl;
+  }
+
+  .ccm-tab-panel-services {
+    @apply space-y-4 rounded-2xl;
+  }
+
+  .ccm-tab-panel-account {
+    @apply space-y-5 rounded-2xl;
+  }
+
+  .ccm-service-group {
+    @apply overflow-hidden rounded-2xl border shadow-md ring-1;
+  }
+
+  .ccm-service-group--claim {
+    @apply border-indigo-300/60 bg-gradient-to-br from-white via-indigo-50/50 to-violet-50/40 ring-indigo-400/20 shadow-indigo-500/10;
+  }
+
+  .ccm-service-group--policy {
+    @apply border-sky-300/60 bg-gradient-to-br from-white via-sky-50/50 to-cyan-50/40 ring-sky-400/20 shadow-sky-500/10;
+  }
+
+  .ccm-service-group--learn {
+    @apply border-violet-300/60 bg-gradient-to-br from-white via-violet-50/50 to-teal-50/40 ring-violet-400/20 shadow-violet-500/10;
+  }
+
+  .ccm-service-group-header {
+    @apply border-b px-4 py-3;
+  }
+
+  .ccm-service-group-header--claim {
+    @apply border-indigo-200/80 bg-gradient-to-r from-indigo-500/15 via-violet-500/10 to-indigo-500/5 text-indigo-950;
+  }
+
+  .ccm-service-group-header--policy {
+    @apply border-sky-200/80 bg-gradient-to-r from-sky-500/15 via-cyan-500/10 to-sky-500/5 text-sky-950;
+  }
+
+  .ccm-service-group-header--learn {
+    @apply border-violet-200/80 bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-teal-500/5 text-violet-950;
+  }
+
+  .ccm-service-group-body {
+    @apply grid grid-cols-1 gap-2 p-3 sm:grid-cols-2;
+  }
+
+  .ccm-service-tile {
+    @apply relative flex min-h-[88px] cursor-pointer flex-row items-center gap-2 rounded-xl border p-3 text-left shadow-md ring-1 transition-all duration-300 active:scale-[0.98] hover:shadow-lg;
+  }
+
+  .ccm-service-tile--primary {
+    @apply ring-2 ring-indigo-500/50 sm:col-span-2;
+  }
+
+  .ccm-service-tile--complaint {
+    @apply border-indigo-300/60 bg-gradient-to-br from-white via-indigo-50/80 to-violet-50/60 ring-indigo-400/20 hover:border-indigo-400 hover:shadow-indigo-500/20;
+  }
+
+  .ccm-service-tile--status {
+    @apply border-amber-300/60 bg-gradient-to-br from-white via-amber-50/80 to-orange-50/50 ring-amber-400/20 hover:border-amber-400 hover:shadow-amber-500/20;
+  }
+
+  .ccm-service-tile--policy {
+    @apply border-sky-300/60 bg-gradient-to-br from-white via-sky-50/80 to-cyan-50/60 ring-sky-400/20 hover:border-sky-400 hover:shadow-sky-500/20;
+  }
+
+  .ccm-service-tile--analysis {
+    @apply border-violet-300/60 bg-gradient-to-br from-white via-violet-50/80 to-fuchsia-50/50 ring-violet-400/20 hover:border-violet-400 hover:shadow-violet-500/20;
+  }
+
+  .ccm-service-tile--fees {
+    @apply border-orange-300/60 bg-gradient-to-br from-white via-orange-50/70 to-amber-50/60 ring-orange-400/20 hover:border-orange-400 hover:shadow-orange-500/20;
+  }
+
+  .ccm-service-tile--parigyan {
+    @apply border-violet-300/60 bg-gradient-to-br from-white via-violet-50/80 to-sky-50/60 ring-violet-400/20 hover:border-violet-400 hover:shadow-violet-500/20;
+  }
+
+  .ccm-service-tile--team {
+    @apply border-teal-300/60 bg-gradient-to-br from-white via-teal-50/80 to-cyan-50/60 ring-teal-400/20 hover:border-teal-400 hover:shadow-teal-500/20;
+  }
+
+  .ccm-service-tile-chevron {
+    @apply absolute right-3 top-1/2 -translate-y-1/2;
+  }
+
+  .ccm-account-signout {
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-xl border border-rose-300/70 bg-gradient-to-r from-rose-50 via-pink-50/80 to-rose-50 px-4 py-3 text-sm font-bold text-rose-800 shadow-sm ring-1 ring-rose-400/25 transition active:scale-[0.98] hover:brightness-105;
   }
 
   .ccm-icon-badge {
@@ -217,6 +374,10 @@
     @apply bg-gradient-to-br from-teal-100 to-cyan-100 ring-1 ring-teal-300/50;
   }
 
+  .ccm-icon-badge--parigyan {
+    @apply bg-gradient-to-br from-violet-100 to-sky-100 ring-1 ring-violet-300/50;
+  }
+
   .ccm-nav-tile {
     @apply flex min-h-[100px] cursor-pointer flex-col items-start justify-center gap-2 rounded-xl border p-4 text-left shadow-md ring-1 transition-all duration-300 active:scale-[0.98] hover:shadow-lg;
   }
@@ -249,8 +410,20 @@
     @apply border-teal-300/60 bg-gradient-to-br from-white via-teal-50/70 to-cyan-50/50 ring-teal-400/20 hover:border-teal-400 hover:shadow-teal-500/20;
   }
 
+  .ccm-nav-tile--parigyan {
+    @apply border-violet-300/60 bg-gradient-to-br from-white via-violet-50/70 to-sky-50/50 ring-violet-400/20 hover:border-violet-400 hover:shadow-violet-500/20;
+  }
+
+  .ui-parigyan-card {
+    @apply border-violet-200/70 bg-gradient-to-br from-white via-violet-50/30 to-sky-50/20 ring-1 ring-violet-200/40;
+  }
+
+  .ccm-auth-header {
+    @apply shrink-0 border-b border-white/20 bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-600 px-4 py-6 text-center shadow-lg shadow-violet-900/20;
+  }
+
   .ccm-auth-card {
-    @apply w-full space-y-6 rounded-2xl border border-violet-200/70 bg-gradient-to-br from-white via-indigo-50/40 to-cyan-50/50 p-6 shadow-2xl shadow-violet-900/15 ring-2 ring-indigo-300/40;
+    @apply w-full space-y-6 rounded-2xl border border-violet-300/70 bg-gradient-to-br from-white via-indigo-50/50 to-cyan-50/60 p-6 shadow-2xl shadow-violet-900/20 ring-2 ring-indigo-400/35;
   }
 
   .ccm-auth-title {

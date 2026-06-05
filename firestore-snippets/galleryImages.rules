@@ -1,0 +1,12 @@
+// Snippet to merge into your root Firestore rules (inside `match /databases/{database}/documents { ... }`).
+//
+// Collection: galleryImages
+// Fields: title, storagePath, downloadUrl, fileName, sizeBytes, mimeType, createdAt, active
+
+match /galleryImages/{imageId} {
+  allow read: if request.auth != null;
+  allow create, update, delete: if request.auth != null;
+}
+
+// Firebase Storage (separate rules file): allow read on gallery-images/* for authenticated users;
+// write for staff accounts used by the master portal.

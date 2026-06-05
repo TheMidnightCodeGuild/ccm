@@ -1,0 +1,12 @@
+// Snippet to merge into your root Firestore rules (inside `match /databases/{database}/documents { ... }`).
+//
+// Collection: parigyan
+// Fields: question (string), answer (string), createdAt (timestamp), active (boolean, default true)
+
+match /parigyan/{itemId} {
+  // CCM customers: read published Q&A when signed in with Firebase Auth
+  allow read: if request.auth != null;
+
+  // Master portal staff: create/update/delete (tighten to admin claims when available)
+  allow create, update, delete: if request.auth != null;
+}

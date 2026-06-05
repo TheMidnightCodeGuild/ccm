@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import CcmAppShell from "@/components/CcmAppShell";
+import CcmBottomNav from "@/components/CcmBottomNav";
+import CcmServiceGroup, { CcmServiceTile } from "@/components/CcmServiceGroup";
 import FileYourComplaint from "@/components/FileYourComplaint";
 import KnowYourPolicy from "@/components/KnowYourPolicy";
 import OngoingComplaintStatus from "@/components/OngoingComplaintStatus";
@@ -12,8 +14,11 @@ import ChangePassword from "@/components/ChangePassword";
 import MeetOurTeam from "@/components/MeetOurTeam";
 import CustomerReviews from "@/components/CustomerReviews";
 import TestimonialVideos from "@/components/TestimonialVideos";
+import Gallery from "@/components/Gallery";
+import FromClaimantMitra from "@/components/FromClaimantMitra";
 import ReferCasePromo from "@/components/ReferCasePromo";
-import CcmIcon, { CcmIconBadge } from "@/components/CcmIcon";
+import Parigyan from "@/components/Parigyan";
+import CcmIcon from "@/components/CcmIcon";
 
 const PANEL_TITLES = {
   complaint: "File Your Complaint",
@@ -23,16 +28,94 @@ const PANEL_TITLES = {
   policyAnalysis: "Policy Analysis",
   successFees: "Success Fees",
   team: "Meet Our Team",
+  parigyan: "Parigyan",
 };
 
-const NAV_ITEMS = [
-  { id: "complaint", label: "File Complaint", short: "Complaint", icon: "filePlus", accent: "complaint", primary: true },
-  { id: "referCase", label: "Refer a Case", short: "Refer", icon: "userPlus", accent: "refer" },
-  { id: "policy", label: "Know Your Policy", short: "Policy", icon: "fileText", accent: "policy" },
-  { id: "status", label: "Complaint Status", short: "Status", icon: "listChecks", accent: "status" },
-  { id: "policyAnalysis", label: "Policy Analysis", short: "Analysis", icon: "clipboardCheck", accent: "analysis" },
-  { id: "successFees", label: "Success Fees Calculator", short: "Fees", icon: "calculator", accent: "fees" },
-  { id: "team", label: "Meet Our Team", short: "Team", icon: "users", accent: "team" },
+const TAB_TITLES = {
+  home: "Claimant Mitra",
+  services: "Services",
+  account: "Account",
+};
+
+const TAB_SUBTITLES = {
+  home: (customer) =>
+    customer ? `Hello, ${customer.name?.split(" ")[0] || "Customer"}` : "Customer portal",
+  services: () => "Case tools & support",
+  account: (customer) => customer?.name || "Your account",
+};
+
+const SERVICE_GROUPS = [
+  {
+    id: "claim",
+    title: "My claim",
+    accent: "claim",
+    items: [
+      {
+        id: "complaint",
+        label: "File Complaint",
+        short: "Complaint",
+        icon: "filePlus",
+        accent: "complaint",
+        primary: true,
+      },
+      {
+        id: "status",
+        label: "Complaint Status",
+        short: "Status",
+        icon: "listChecks",
+        accent: "status",
+      },
+    ],
+  },
+  {
+    id: "policy",
+    title: "Policy and fees",
+    accent: "policy",
+    items: [
+      {
+        id: "policy",
+        label: "Know Your Policy",
+        short: "Policy",
+        icon: "fileText",
+        accent: "policy",
+      },
+      {
+        id: "policyAnalysis",
+        label: "Policy Analysis",
+        short: "Analysis",
+        icon: "clipboardCheck",
+        accent: "analysis",
+      },
+      {
+        id: "successFees",
+        label: "Success Fees Calculator",
+        short: "Fees",
+        icon: "calculator",
+        accent: "fees",
+      },
+    ],
+  },
+  {
+    id: "learn",
+    title: "Learn and support",
+    accent: "learn",
+    items: [
+      {
+        id: "parigyan",
+        label: "Parigyan",
+        short: "Parigyan",
+        icon: "bookOpen",
+        accent: "parigyan",
+      },
+      {
+        id: "team",
+        label: "Meet Our Team",
+        short: "Team",
+        icon: "users",
+        accent: "team",
+      },
+    ],
+  },
 ];
 
 const PROFILE_FIELDS = [
@@ -75,7 +158,9 @@ export default function Dashboard({ userId }) {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("home");
   const [activePanel, setActivePanel] = useState(null);
+  const [panelOriginTab, setPanelOriginTab] = useState("services");
   const [profileExpanded, setProfileExpanded] = useState(false);
 
   const loadCustomer = useCallback(async () => {
@@ -116,19 +201,36 @@ export default function Dashboard({ userId }) {
     router.push("/");
   };
 
-  const shellTitle = activePanel ? PANEL_TITLES[activePanel] : "Claimant Mitra";
+  const openPanel = (panelId, originTab = "services") => {
+    setPanelOriginTab(originTab);
+    setActivePanel(panelId);
+  };
+
+  const handlePanelBack = () => {
+    setActivePanel(null);
+    setActiveTab(panelOriginTab);
+  };
+
+  const shellTitle = activePanel
+    ? PANEL_TITLES[activePanel]
+    : TAB_TITLES[activeTab];
   const shellSubtitle = activePanel
     ? customer?.name
-    : customer
-      ? `Hello, ${customer.name?.split(" ")[0] || "Customer"}`
-      : "Customer portal";
+    : TAB_SUBTITLES[activeTab](customer);
 
   return (
     <CcmAppShell
       title={shellTitle}
       subtitle={shellSubtitle}
-      onBack={activePanel ? () => setActivePanel(null) : undefined}
-      onLogout={handleLogout}
+      onBack={activePanel ? handlePanelBack : undefined}
+      hasBottomNav={!activePanel}
+      bottomNav={
+        <CcmBottomNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          hidden={!!activePanel}
+        />
+      }
     >
       {loading && (
         <div className="flex min-h-[40vh] items-center justify-center">
@@ -142,15 +244,68 @@ export default function Dashboard({ userId }) {
         </p>
       )}
 
-      {!loading && customer && !activePanel && (
-        <div className="space-y-5">
+      {!loading && customer && !activePanel && activeTab === "home" && (
+        <div className="ccm-tab-panel-home">
+          <div className="ccm-home-hero">
+            <p className="text-xs font-bold uppercase tracking-widest text-violet-700">
+              Welcome back
+            </p>
+            <h2 className="ccm-home-hero-title mt-1">
+              {customer.name?.split(" ")[0] || "Customer"}
+            </h2>
+            <p className="mt-2 text-sm text-slate-700">
+              Stories, updates, and ways to earn — all in one place.
+            </p>
+          </div>
+
+          <ReferCasePromo onRefer={() => openPanel("referCase", "home")} />
+
+          <CustomerReviews />
+          <TestimonialVideos />
+          <Gallery />
+          <FromClaimantMitra />
+        </div>
+      )}
+
+      {!loading && customer && !activePanel && activeTab === "services" && (
+        <div className="ccm-tab-panel-services">
           <div className="ui-page-intro">
             <div className="flex items-center gap-2">
-              <CcmIcon name="layoutGrid" size={22} />
-              <p className="ui-section-eyebrow mb-0!">Your profile</p>
+              <CcmIcon name="sparkles" size={22} className="text-indigo-600" />
+              <p className="ui-section-eyebrow mb-0!">Your services</p>
             </div>
             <p className="mt-2 text-sm text-slate-600">
-              Tap a service below to get started.
+              File claims, check status, and explore policy tools.
+            </p>
+          </div>
+
+          {SERVICE_GROUPS.map((group) => (
+            <CcmServiceGroup
+              key={group.id}
+              title={group.title}
+              accent={group.accent}
+            >
+              {group.items.map((item) => (
+                <CcmServiceTile
+                  key={item.id}
+                  item={item}
+                  onClick={() => openPanel(item.id, "services")}
+                />
+              ))}
+            </CcmServiceGroup>
+          ))}
+        </div>
+      )}
+
+      {!loading && customer && !activePanel && activeTab === "account" && (
+        <div className="ccm-tab-panel-account">
+          <div className="ui-page-intro">
+            <div className="flex items-center gap-2">
+              <CcmIcon name="user" size={22} className="text-teal-600" />
+              <p className="ui-section-eyebrow mb-0!">Your account</p>
+            </div>
+            <p className="mt-2 text-sm text-slate-600">
+              Profile, security, and sign out.
             </p>
           </div>
 
@@ -158,7 +313,7 @@ export default function Dashboard({ userId }) {
             <button
               type="button"
               onClick={() => setProfileExpanded((v) => !v)}
-              className="w-full flex items-center justify-between gap-3 text-left"
+              className="flex w-full items-center justify-between gap-3 text-left"
               aria-expanded={profileExpanded}
             >
               <span className="flex items-center gap-2">
@@ -201,31 +356,14 @@ export default function Dashboard({ userId }) {
 
           <ChangePassword />
 
-          <ReferCasePromo onRefer={() => setActivePanel("referCase")} />
-
-          <div className="grid grid-cols-2 gap-3">
-            {NAV_ITEMS.filter((item) => item.id !== "referCase").map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActivePanel(item.id)}
-                className={`ccm-nav-tile ccm-nav-tile--${item.accent}${
-                  item.primary ? " ring-2 ring-indigo-500/50" : ""
-                }`}
-              >
-                <CcmIconBadge name={item.icon} accent={item.accent} />
-                <span className="text-sm font-semibold text-slate-900">
-                  {item.short}
-                </span>
-                <span className="text-xs leading-tight text-slate-600">
-                  {item.label}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          <CustomerReviews />
-          <TestimonialVideos />
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="ccm-account-signout"
+          >
+            <CcmIcon name="logOut" size={18} className="text-rose-700" />
+            Sign out
+          </button>
         </div>
       )}
 
@@ -267,6 +405,8 @@ export default function Dashboard({ userId }) {
       )}
 
       {!loading && customer && activePanel === "team" && <MeetOurTeam />}
+
+      {!loading && customer && activePanel === "parigyan" && <Parigyan />}
     </CcmAppShell>
   );
 }
