@@ -1,0 +1,12 @@
+// Snippet to merge into your root Firestore rules (inside `match /databases/{database}/documents { ... }`).
+//
+// Field on users/{caseId}: ombudsmanGuides (array)
+// Each item: id, fileName, title, storagePath, downloadUrl, uploadedAt
+
+// Ensure your existing users/{caseId} rules allow:
+// - staff (master portal): read, update for ombudsmanGuides
+// - CCM customers: read users docs linked via customers.cases (same as complaint status today)
+
+// Firebase Storage (separate rules file):
+// allow read on cases/{caseId}/ombudsman-guides/* for authenticated users;
+// allow write for staff accounts used by the master portal.

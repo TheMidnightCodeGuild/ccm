@@ -8,6 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import { CcmPageIntro } from "@/components/CcmIcon";
+import OmbudsmanGuide from "@/components/OmbudsmanGuide";
 
 const CUSTOMER_LOG_SECTIONS = [
   { key: "mainLogs", title: "Main Logs", description: "General case updates" },
@@ -237,6 +238,13 @@ function CaseCard({
           </LabeledField>
         )}
       </div>
+
+      {caseItem.ombudsman && (
+        <OmbudsmanGuide
+          guides={caseItem.ombudsmanGuides}
+          caseName={caseItem.name}
+        />
+      )}
 
       <section className="mt-3 min-w-0 border-t border-indigo-100 pt-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
