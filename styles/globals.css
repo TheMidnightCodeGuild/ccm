@@ -144,6 +144,22 @@
     @apply inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 shadow-md shadow-emerald-600/30 hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition;
   }
 
+  .ccm-video-verification-banner {
+    @apply relative overflow-hidden rounded-2xl border border-violet-300/70 border-l-4 border-l-violet-600 bg-gradient-to-br from-violet-500/15 via-amber-50/90 to-fuchsia-50/50 px-4 py-4 shadow-lg shadow-violet-500/15 ring-1 ring-violet-400/25;
+  }
+
+  .ccm-video-verification-banner-icon {
+    @apply flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-100 to-amber-100 ring-1 ring-violet-300/50;
+  }
+
+  .ccm-video-verification-banner-eyebrow {
+    @apply text-xs font-bold uppercase tracking-widest text-violet-700;
+  }
+
+  .ccm-video-verification-banner-btn {
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-700 shadow-md shadow-violet-600/30 transition hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2;
+  }
+
   .ui-section-header-reviews {
     @apply flex items-center gap-2 rounded-xl border border-amber-300/50 bg-gradient-to-r from-amber-100/90 via-fuchsia-100/60 to-violet-100/50 px-3 py-2 shadow-sm ring-1 ring-amber-400/20;
   }

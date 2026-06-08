@@ -9,6 +9,9 @@ import {
 } from "firebase/firestore";
 import { CcmPageIntro } from "@/components/CcmIcon";
 import OmbudsmanGuide from "@/components/OmbudsmanGuide";
+import VideoVerificationBanner, {
+  isVideoVerificationActionRequired,
+} from "@/components/VideoVerificationBanner";
 
 const CUSTOMER_LOG_SECTIONS = [
   { key: "mainLogs", title: "Main Logs", description: "General case updates" },
@@ -238,6 +241,14 @@ function CaseCard({
           </LabeledField>
         )}
       </div>
+
+      {isVideoVerificationActionRequired(caseItem) && (
+        <VideoVerificationBanner
+          caseId={caseItem.id}
+          caseName={caseItem.name}
+          requestedAt={caseItem.requestVerificationRequestedAt}
+        />
+      )}
 
       {caseItem.ombudsman && (
         <OmbudsmanGuide
